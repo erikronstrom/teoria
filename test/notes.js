@@ -101,16 +101,16 @@ vows.describe('TeoriaNote class').addBatch({
       assert.equal(teoria.note([0, 0]).scientific(), 'A4');
     },
 
-    '[-4, 4] is C#3': function() {
-      assert.equal(teoria.note([-4, 4]).scientific(), 'C#3');
+    '[-12, -20] is C#3': function() {
+      assert.equal(teoria.note([-12, -20]).scientific(), 'C#3');
     },
 
-    '[3, -4] is F5': function() {
-      assert.equal(teoria.note([3, -4]).scientific(), 'F5');
+    '[5, 8] is F5': function() {
+      assert.equal(teoria.note([5, 8]).scientific(), 'F5');
     },
 
-    '[4, -7] is Ab4': function() {
-      assert.equal(teoria.note([4, -7]).scientific(), 'Ab4');
+    '[0, -1] is Ab4': function() {
+      assert.equal(teoria.note([0, -1]).scientific(), 'Ab4');
     }
   },
 
@@ -159,8 +159,8 @@ vows.describe('TeoriaNote class').addBatch({
       assert.equal(teoria.note.fromMIDI(77).scientific(), 'F5');
     },
 
-    'MIDI#61 is Db4': function() {
-      assert.equal(teoria.note.fromMIDI(61).scientific(), 'Db4');
+    'MIDI#61 is C#4': function() {
+      assert.equal(teoria.note.fromMIDI(61).scientific(), 'C#4');
     },
 
     'MIDI#80 is G#5': function() {
