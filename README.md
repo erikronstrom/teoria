@@ -6,6 +6,23 @@ for music theory, both Jazz and Classical. It aims at providing an intuitive
 programming interface for music software (such as Sheet Readers,
 Sheet Writers, MIDI Players etc.).
 
+This fork replaces the pitch and interval representation of Teoria.
+The `[fifths, octaves]` representation used in Teoria is elegant,
+but it does not [easily] extend to pitch-classes outside the Western
+tonal system of twelve semitones per octave.
+
+This fork uses instead a vector of `[steps, semitones]`, where `steps`
+is the "diatonic distance" of an interval, and `semitones` the number
+of semitones. Thus, a major third is represented as `[2, 4]`. It is
+easy to identify the relationship with e.g. the minor third `[2, 3]`,
+which belongs to the same pitch-class but has different accidentals and
+sound differently. The diminished fourth `[3, 4]` sounds the same as
+the major third, but belongs to a different pitch-class.
+
+This model can easily represent intervals with higher resoultion than
+semitones, by using fractional numbers as `semitones`. For example,
+a third between major and minor can be written `[2, 3.5]`.
+
 Features
 ---------
 
