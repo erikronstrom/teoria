@@ -1,5 +1,5 @@
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.teoria=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var Note = require('./lib/note');
+var Pitch = require('./lib/pitch');
 var Interval = require('./lib/interval');
 var Chord = require('./lib/chord');
 var Scale = require('./lib/scale');
@@ -10,13 +10,13 @@ function intervalConstructor(from, to) {
   if (typeof from === 'string')
     return Interval.toCoord(from);
 
-  if (typeof to === 'string' && from instanceof Note)
+  if (typeof to === 'string' && from instanceof Pitch)
     return Interval.from(from, Interval.toCoord(to));
 
-  if (to instanceof Interval && from instanceof Note)
+  if (to instanceof Interval && from instanceof Pitch)
     return Interval.from(from, to);
 
-  if (to instanceof Note && from instanceof Note)
+  if (to instanceof Pitch && from instanceof Pitch)
     return Interval.between(from, to);
 
   throw new Error('Invalid parameters');
@@ -27,17 +27,17 @@ intervalConstructor.from = Interval.from;
 intervalConstructor.between = Interval.between;
 intervalConstructor.invert = Interval.invert;
 
-function noteConstructor(name, duration) {
+function pitchConstructor(name, duration) {
   if (typeof name === 'string')
-    return Note.fromString(name, duration);
+    return Pitch.fromString(name, duration);
   else
-    return new Note(name, duration);
+    return new Pitch(name, duration);
 }
 
-noteConstructor.fromString = Note.fromString;
-noteConstructor.fromKey = Note.fromKey;
-noteConstructor.fromFrequency = Note.fromFrequency;
-noteConstructor.fromMIDI = Note.fromMIDI;
+pitchConstructor.fromString = Pitch.fromString;
+pitchConstructor.fromKey = Pitch.fromKey;
+pitchConstructor.fromFrequency = Pitch.fromFrequency;
+pitchConstructor.fromMIDI = Pitch.fromMIDI;
 
 function chordConstructor(name, symbol) {
   if (typeof name === 'string') {
@@ -45,22 +45,22 @@ function chordConstructor(name, symbol) {
     root = name.match(/^([a-h])(x|#|bb|b?)/i);
     if (root && root[0]) {
       octave = typeof symbol === 'number' ? symbol.toString(10) : '4';
-      return new Chord(Note.fromString(root[0].toLowerCase() + octave),
+      return new Chord(Pitch.fromString(root[0].toLowerCase() + octave),
                             name.substr(root[0].length));
     }
-  } else if (name instanceof Note)
+  } else if (name instanceof Pitch)
     return new Chord(name, symbol);
 
-  throw new Error('Invalid Chord. Couldn\'t find note name');
+  throw new Error('Invalid Chord. Couldn\'t find pitch name');
 }
 
 function scaleConstructor(tonic, scale) {
-  tonic = (tonic instanceof Note) ? tonic : teoria.note(tonic);
+  tonic = (tonic instanceof Pitch) ? tonic : teoria.pitch(tonic);
   return new Scale(tonic, scale);
 }
 
 var teoria = {
-  note: noteConstructor,
+  pitch: pitchConstructor,
 
   chord: chordConstructor,
 
@@ -68,7 +68,7 @@ var teoria = {
 
   scale: scaleConstructor,
 
-  Note: Note,
+  Pitch: Pitch,
   Chord: Chord,
   Scale: Scale,
   Interval: Interval
@@ -77,10 +77,10 @@ var teoria = {
 require('./lib/sugar')(teoria);
 exports = module.exports = teoria;
 
-},{"./lib/chord":2,"./lib/interval":3,"./lib/note":5,"./lib/scale":6,"./lib/sugar":7}],2:[function(require,module,exports){
+},{"./lib/chord":2,"./lib/interval":3,"./lib/pitch":5,"./lib/scale":6,"./lib/sugar":7}],2:[function(require,module,exports){
 var daccord = require('daccord');
 var knowledge = require('./knowledge');
-var Note = require('./note');
+var Pitch = require('./pitch');
 var Interval = require('./interval');
 
 function Chord(root, name) {
@@ -104,11 +104,11 @@ function Chord(root, name) {
   this._voicing = this.intervals.slice();
 
   if (bass) {
-    var intervals = this.intervals, bassInterval, note;
-    // Make sure the bass is atop of the root note
-    note = Note.fromString(bass + (root.octave() + 1)); // crude
+    var intervals = this.intervals, bassInterval, pitch;
+    // Make sure the bass is atop of the root pitch
+    pitch = Pitch.fromString(bass + (root.octave() + 1)); // crude
 
-    bassInterval = Interval.between(root, note);
+    bassInterval = Interval.between(root, pitch);
     bass = bassInterval.simple();
     bassInterval = bassInterval.invert().direction('down');
 
@@ -121,7 +121,7 @@ function Chord(root, name) {
 }
 
 Chord.prototype = {
-  notes: function() {
+  pitches: function() {
     var root = this.root;
     return this.voicing().map(function(interval) {
       return root.interval(interval);
@@ -129,7 +129,7 @@ Chord.prototype = {
   },
 
   simple: function() {
-    return this.notes().map(function(n) { return n.toString(true); });
+    return this.pitches().map(function(n) { return n.toString(true); });
   },
 
   bass: function() {
@@ -304,7 +304,7 @@ Chord.prototype = {
 
 module.exports = Chord;
 
-},{"./interval":3,"./knowledge":4,"./note":5,"daccord":9}],3:[function(require,module,exports){
+},{"./interval":3,"./knowledge":4,"./pitch":5,"daccord":9}],3:[function(require,module,exports){
 var knowledge = require('./knowledge');
 var vector = require('./vector');
 var toCoord = require('interval-coords');
@@ -473,9 +473,9 @@ Interval.invert = function(sInterval) {
 module.exports = Interval;
 
 },{"./knowledge":4,"./vector":8,"interval-coords":13}],4:[function(require,module,exports){
-// Note coordinates [octave, fifth] relative to C
+// Pitch coordinates [octave, fifth] relative to C
 module.exports = {
-  notes: {
+  pitches: {
     c: [0, 0],
     d: [-1, 2],
     e: [-2, 4],
@@ -652,17 +652,17 @@ function pad(str, ch, len) {
 }
 
 
-function Note(coord, duration) {
-  if (!(this instanceof Note)) return new Note(coord, duration);
+function Pitch(coord, duration) {
+  if (!(this instanceof Pitch)) return new Pitch(coord, duration);
   duration = duration || {};
 
   this.duration = { value: duration.value || 4, dots: duration.dots || 0 };
   this.coord = coord;
 }
 
-Note.prototype = {
+Pitch.prototype = {
   octave: function() {
-    return this.coord[0] + knowledge.A4[0] - knowledge.notes[this.name()][0] +
+    return this.coord[0] + knowledge.A4[0] - knowledge.pitches[this.name()][0] +
       this.accidentalValue() * 4;
   },
 
@@ -679,7 +679,7 @@ Note.prototype = {
   },
 
   /**
-   * Returns the key number of the note
+   * Returns the key number of the pitch
    */
   key: function(white) {
     if (white)
@@ -689,14 +689,14 @@ Note.prototype = {
   },
 
   /**
-  * Returns a number ranging from 0-127 representing a MIDI note value
+  * Returns a number ranging from 0-127 representing a MIDI pitch value
   */
   midi: function() {
     return this.key() + 20;
   },
 
   /**
-   * Calculates and returns the frequency of the note.
+   * Calculates and returns the frequency of the pitch.
    * Optional concert pitch (def. 440)
    */
   fq: function(concertPitch) {
@@ -707,7 +707,7 @@ Note.prototype = {
   },
 
   /**
-   * Returns the pitch class index (chroma) of the note
+   * Returns the pitch class index (chroma) of the pitch
    */
   chroma: function() {
     var value = (vector.sum(vector.mul(this.coord, [12, 7])) - 3) % 12;
@@ -719,8 +719,8 @@ Note.prototype = {
     if (typeof interval === 'string') interval = Interval.toCoord(interval);
 
     if (interval instanceof Interval)
-      return new Note(vector.add(this.coord, interval.coord));
-    else if (interval instanceof Note)
+      return new Pitch(vector.add(this.coord, interval.coord));
+    else if (interval instanceof Pitch)
       return new Interval(vector.sub(interval.coord, this.coord));
   },
 
@@ -730,7 +730,7 @@ Note.prototype = {
   },
 
   /**
-   * Returns the Helmholtz notation form of the note (fx C,, d' F# g#'')
+   * Returns the Helmholtz notation form of the pitch (fx C,, d' F# g#'')
    */
   helmholtz: function() {
     var octave = this.octave();
@@ -743,26 +743,26 @@ Note.prototype = {
   },
 
   /**
-   * Returns the scientific notation form of the note (fx E4, Bb3, C#7 etc.)
+   * Returns the scientific notation form of the pitch (fx E4, Bb3, C#7 etc.)
    */
   scientific: function() {
     return this.name().toUpperCase() + this.accidental() + this.octave();
   },
 
   /**
-   * Returns notes that are enharmonic with this note.
+   * Returns pitches that are enharmonic with this pitch.
    */
   enharmonics: function(oneaccidental) {
     var key = this.key(), limit = oneaccidental ? 2 : 3;
 
     return ['m3', 'm2', 'm-2', 'm-3']
       .map(this.interval.bind(this))
-      .filter(function(note) {
-      var acc = note.accidentalValue();
-      var diff = key - (note.key() - acc);
+      .filter(function(pitch) {
+      var acc = pitch.accidentalValue();
+      var diff = key - (pitch.key() - acc);
 
       if (diff < limit && diff > -limit) {
-        note.coord = vector.add(note.coord, vector.mul(knowledge.sharp, diff - acc));
+        pitch.coord = vector.add(pitch.coord, vector.mul(knowledge.sharp, diff - acc));
         return true;
       }
     });
@@ -809,7 +809,7 @@ Note.prototype = {
   },
 
   /**
-   * Returns the duration of the note (including dots)
+   * Returns the duration of the pitch (including dots)
    * in seconds. The first argument is the tempo in beats
    * per minute, the second is the beat unit (i.e. the
    * lower numeral in a time signature).
@@ -820,30 +820,30 @@ Note.prototype = {
   },
 
   /**
-   * Returns the name of the note, with an optional display of octave number
+   * Returns the name of the pitch, with an optional display of octave number
    */
   toString: function(dont) {
     return this.name() + this.accidental() + (dont ? '' : this.octave());
   }
 };
 
-Note.fromString = function(name, dur) {
+Pitch.fromString = function(name, dur) {
   var coord = scientific(name);
   if (!coord) coord = helmholtz(name);
-  return new Note(coord, dur);
+  return new Pitch(coord, dur);
 }
 
-Note.fromKey = function(key) {
+Pitch.fromKey = function(key) {
   var octave = Math.floor((key - 4) / 12);
   var distance = key - (octave * 12) - 4;
   var name = knowledge.fifths[(2 * Math.round(distance / 2) + 1) % 7];
-  var note = vector.add(vector.sub(knowledge.notes[name], knowledge.A4), [octave + 1, 0]);
-  var diff = (key - 49) - vector.sum(vector.mul(note, [12, 7]));
+  var pitch = vector.add(vector.sub(knowledge.pitches[name], knowledge.A4), [octave + 1, 0]);
+  var diff = (key - 49) - vector.sum(vector.mul(pitch, [12, 7]));
 
-  return new Note(diff ? vector.add(note, vector.mul(knowledge.sharp, diff)) : note);
+  return new Pitch(diff ? vector.add(pitch, vector.mul(knowledge.sharp, diff)) : pitch);
 }
 
-Note.fromFrequency = function(fq, concertPitch) {
+Pitch.fromFrequency = function(fq, concertPitch) {
   var key, cents, originalFq;
   concertPitch = concertPitch || 440;
 
@@ -852,14 +852,14 @@ Note.fromFrequency = function(fq, concertPitch) {
   originalFq = concertPitch * Math.pow(2, (key - 49) / 12);
   cents = 1200 * (Math.log(fq / originalFq) / Math.log(2));
 
-  return { note: Note.fromKey(key), cents: cents };
+  return { pitch: Pitch.fromKey(key), cents: cents };
 }
 
-Note.fromMIDI = function(note) {
-  return Note.fromKey(note - 20);
+Pitch.fromMIDI = function(pitch) {
+  return Pitch.fromKey(pitch - 20);
 }
 
-module.exports = Note;
+module.exports = Pitch;
 
 },{"./interval":3,"./knowledge":4,"./vector":8,"helmholtz":10,"scientific-notation":14}],6:[function(require,module,exports){
 var knowledge = require('./knowledge');
@@ -917,18 +917,18 @@ function Scale(tonic, scale) {
 }
 
 Scale.prototype = {
-  notes: function() {
-    var notes = [];
+  pitches: function() {
+    var pitches = [];
 
     for (var i = 0, length = this.scale.length; i < length; i++) {
-      notes.push(this.tonic.interval(this.scale[i]));
+      pitches.push(this.tonic.interval(this.scale[i]));
     }
 
-    return notes;
+    return pitches;
   },
 
   simple: function() {
-    return this.notes().map(function(n) { return n.toString(true); });
+    return this.pitches().map(function(n) { return n.toString(true); });
   },
 
   type: function() {
@@ -949,7 +949,7 @@ Scale.prototype = {
     if (index)
       return this.get(index).solfege(this, showOctaves);
 
-    return this.notes().map(function(n) {
+    return this.pitches().map(function(n) {
       return n.solfege(this, showOctaves);
     });
   },
@@ -975,36 +975,36 @@ module.exports = Scale;
 var knowledge = require('./knowledge');
 
 module.exports = function(teoria) {
-  var Note = teoria.Note;
+  var Pitch = teoria.Pitch;
   var Chord = teoria.Chord;
   var Scale = teoria.Scale;
 
-  Note.prototype.chord = function(chord) {
+  Pitch.prototype.chord = function(chord) {
     chord = (chord in knowledge.chordShort) ? knowledge.chordShort[chord] : chord;
 
     return new Chord(this, chord);
   }
 
-  Note.prototype.scale = function(scale) {
+  Pitch.prototype.scale = function(scale) {
     return new Scale(this, scale);
   }
 }
 
 },{"./knowledge":4}],8:[function(require,module,exports){
 module.exports = {
-  add: function(note, interval) {
-    return [note[0] + interval[0], note[1] + interval[1]];
+  add: function(pitch, interval) {
+    return [pitch[0] + interval[0], pitch[1] + interval[1]];
   },
 
-  sub: function(note, interval) {
-    return [note[0] - interval[0], note[1] - interval[1]];
+  sub: function(pitch, interval) {
+    return [pitch[0] - interval[0], pitch[1] - interval[1]];
   },
 
-  mul: function(note, interval) {
+  mul: function(pitch, interval) {
     if (typeof interval === 'number')
-      return [note[0] * interval, note[1] * interval];
+      return [pitch[0] * interval, pitch[1] * interval];
     else
-      return [note[0] * interval[0], note[1] * interval[1]];
+      return [pitch[0] * interval[0], pitch[1] * interval[1]];
   },
 
   sum: function(coord) {
@@ -1040,13 +1040,13 @@ var SYMBOLS = {
 
 module.exports = function(symbol) {
   var c, parsing = 'quality', additionals = [], name, chordLength = 2
-  var notes = ['P1', 'M3', 'P5', 'm7', 'M9', 'P11', 'M13'];
+  var pitches = ['P1', 'M3', 'P5', 'm7', 'M9', 'P11', 'M13'];
   var explicitMajor = false;
 
   function setChord(name) {
     var intervals = SYMBOLS[name];
     for (var i = 0, len = intervals.length; i < len; i++) {
-      notes[i + 1] = intervals[i];
+      pitches[i + 1] = intervals[i];
     }
 
     chordLength = intervals.length;
@@ -1089,13 +1089,13 @@ module.exports = function(symbol) {
           return new Error('Invalid interval extension: ' + c.toString(10));
 
         if (name === 'o' || name === 'dim')
-          notes[3] = 'd7';
+          pitches[3] = 'd7';
         else if (explicitMajor)
-          notes[3] = 'M7';
+          pitches[3] = 'M7';
 
         i += c >= 10 ? 1 : 0;
       } else if (c === 6) {
-        notes[3] = 'M6';
+        pitches[3] = 'M6';
         chordLength = Math.max(3, chordLength);
       } else
         i -= 1;
@@ -1121,7 +1121,7 @@ module.exports = function(symbol) {
             ignore = true;
 
           chordLength = Math.max(3, chordLength);
-          notes[3] = 'M7';
+          pitches[3] = 'M7';
         } else if (lower === 'sus') {
           var type = 'P4';
           if (next === '2' || next === '4') {
@@ -1131,7 +1131,7 @@ module.exports = function(symbol) {
               type = 'M2';
           }
 
-          notes[1] = type; // Replace third with M2 or P4
+          pitches[1] = type; // Replace third with M2 or P4
         } else if (lower === 'add') {
           if (next === '9')
             additionals.push('M9');
@@ -1152,17 +1152,17 @@ module.exports = function(symbol) {
 
           if (token === 6) {
             if (sharp)
-              notes[3] = 'A6';
+              pitches[3] = 'A6';
             else if (flat)
-              notes[3] = 'm6';
+              pitches[3] = 'm6';
             else
-              notes[3] = 'M6';
+              pitches[3] = 'M6';
 
             chordLength = Math.max(3, chordLength);
             return;
           }
 
-          // Calculate the position in the 'note' array
+          // Calculate the position in the 'pitch' array
           intPos = (token - 1) / 2;
           if (chordLength < intPos)
             chordLength = intPos;
@@ -1170,7 +1170,7 @@ module.exports = function(symbol) {
           if (token < 5 || token === 7 || intPos !== Math.round(intPos))
             return new Error('Invalid interval alteration: ' + token);
 
-          quality = notes[intPos][0];
+          quality = pitches[intPos][0];
 
           // Alterate the quality of the interval according the accidentals
           if (sharp) {
@@ -1190,7 +1190,7 @@ module.exports = function(symbol) {
           }
 
           sharp = flat = false;
-          notes[intPos] = quality + token;
+          pitches[intPos] = quality + token;
         }
       });
       parsing = 'ended';
@@ -1199,11 +1199,11 @@ module.exports = function(symbol) {
     }
   }
 
-  return notes.slice(0, chordLength + 1).concat(additionals);
+  return pitches.slice(0, chordLength + 1).concat(additionals);
 }
 
 },{}],10:[function(require,module,exports){
-var coords = require('notecoord');
+var coords = require('pitchcoord');
 var accval = require('accidental-value');
 
 module.exports = function helmholtz(name) {
@@ -1213,15 +1213,15 @@ module.exports = function helmholtz(name) {
   if (!parts || name !== parts[0])
     throw new Error('Invalid formatting');
 
-  var note = parts[2];
+  var pitch = parts[2];
   var octaveFirst = parts[1];
   var octaveLast = parts[4];
-  var lower = note === note.toLowerCase();
+  var lower = pitch === pitch.toLowerCase();
   var octave;
 
   if (octaveFirst) {
     if (lower)
-      throw new Error('Invalid formatting - found commas before lowercase note');
+      throw new Error('Invalid formatting - found commas before lowercase pitch');
 
     octave = 2 - octaveFirst.length;
   } else if (octaveLast) {
@@ -1236,7 +1236,7 @@ module.exports = function helmholtz(name) {
     octave = lower ? 3 : 2;
 
   var accidentalValue = accval.interval(parts[3].toLowerCase());
-  var coord = coords(note.toLowerCase());
+  var coord = coords(pitch.toLowerCase());
 
   coord[0] += octave;
   coord[0] += accidentalValue[0] - coords.A4[0];
@@ -1245,7 +1245,7 @@ module.exports = function helmholtz(name) {
   return coord;
 };
 
-},{"accidental-value":11,"notecoord":12}],11:[function(require,module,exports){
+},{"accidental-value":11,"pitchcoord":12}],11:[function(require,module,exports){
 var accidentalValues = {
   'bb': -2,
   'b': -1,
@@ -1265,7 +1265,7 @@ module.exports.interval = function accidentalInterval(acc) {
 
 },{}],12:[function(require,module,exports){
 // First coord is octaves, second is fifths. Distances are relative to c
-var notes = {
+var pitches = {
   c: [0, 0],
   d: [-1, 2],
   e: [-2, 4],
@@ -1277,17 +1277,17 @@ var notes = {
 };
 
 module.exports = function(name) {
-  return name in notes ? [notes[name][0], notes[name][1]] : null;
+  return name in pitches ? [pitches[name][0], pitches[name][1]] : null;
 };
 
-module.exports.notes = notes;
+module.exports.pitches = pitches;
 module.exports.A4 = [3, 3]; // Relative to C0 (scientic notation, ~16.35Hz)
 module.exports.sharp = [-4, 7];
 
 },{}],13:[function(require,module,exports){
 var pattern = /^(AA|A|P|M|m|d|dd)(-?\d+)$/;
 
-// The interval it takes to raise a note a semitone
+// The interval it takes to raise a pitch a semitone
 var sharp = [-4, 7];
 
 var pAlts = ['dd', 'd', 'P', 'A', 'AA'];
@@ -1335,7 +1335,7 @@ module.exports = function(simple) {
 module.exports.coords = baseIntervals.slice(0);
 
 },{}],14:[function(require,module,exports){
-var coords = require('notecoord');
+var coords = require('pitchcoord');
 var accval = require('accidental-value');
 
 module.exports = function scientific(name) {
@@ -1344,12 +1344,12 @@ module.exports = function scientific(name) {
   parser = name.match(format);
   if (!(parser && name === parser[0] && parser[3].length)) return;
 
-  var noteName = parser[1];
+  var pitchName = parser[1];
   var octave = +parser[3];
   var accidental = parser[2].length ? parser[2].toLowerCase() : '';
 
   var accidentalValue = accval.interval(accidental);
-  var coord = coords(noteName.toLowerCase());
+  var coord = coords(pitchName.toLowerCase());
 
   coord[0] += octave;
   coord[0] += accidentalValue[0] - coords.A4[0];
@@ -1358,7 +1358,7 @@ module.exports = function scientific(name) {
   return coord;
 };
 
-},{"accidental-value":15,"notecoord":16}],15:[function(require,module,exports){
+},{"accidental-value":15,"pitchcoord":16}],15:[function(require,module,exports){
 arguments[4][11][0].apply(exports,arguments)
 },{"dup":11}],16:[function(require,module,exports){
 arguments[4][12][0].apply(exports,arguments)

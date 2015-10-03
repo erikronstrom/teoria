@@ -1,4 +1,4 @@
-var Note = require('./lib/note');
+var Pitch = require('./lib/pitch');
 var Interval = require('./lib/interval');
 var Chord = require('./lib/chord');
 var Scale = require('./lib/scale');
@@ -9,13 +9,13 @@ function intervalConstructor(from, to) {
   if (typeof from === 'string')
     return Interval.toCoord(from);
 
-  if (typeof to === 'string' && from instanceof Note)
+  if (typeof to === 'string' && from instanceof Pitch)
     return Interval.from(from, Interval.toCoord(to));
 
-  if (to instanceof Interval && from instanceof Note)
+  if (to instanceof Interval && from instanceof Pitch)
     return Interval.from(from, to);
 
-  if (to instanceof Note && from instanceof Note)
+  if (to instanceof Pitch && from instanceof Pitch)
     return Interval.between(from, to);
 
   throw new Error('Invalid parameters');
@@ -26,17 +26,17 @@ intervalConstructor.from = Interval.from;
 intervalConstructor.between = Interval.between;
 intervalConstructor.invert = Interval.invert;
 
-function noteConstructor(name, duration) {
+function pitchConstructor(name) {
   if (typeof name === 'string')
-    return Note.fromString(name, duration);
+    return Pitch.fromString(name);
   else
-    return new Note(name, duration);
+    return new Pitch(name);
 }
 
-noteConstructor.fromString = Note.fromString;
-noteConstructor.fromKey = Note.fromKey;
-noteConstructor.fromFrequency = Note.fromFrequency;
-noteConstructor.fromMIDI = Note.fromMIDI;
+pitchConstructor.fromString = Pitch.fromString;
+pitchConstructor.fromKey = Pitch.fromKey;
+pitchConstructor.fromFrequency = Pitch.fromFrequency;
+pitchConstructor.fromMIDI = Pitch.fromMIDI;
 
 function chordConstructor(name, symbol) {
   if (typeof name === 'string') {
@@ -44,22 +44,22 @@ function chordConstructor(name, symbol) {
     root = name.match(/^([a-h])(x|#|bb|b?)/i);
     if (root && root[0]) {
       octave = typeof symbol === 'number' ? symbol.toString(10) : '4';
-      return new Chord(Note.fromString(root[0].toLowerCase() + octave),
+      return new Chord(Pitch.fromString(root[0].toLowerCase() + octave),
                             name.substr(root[0].length));
     }
-  } else if (name instanceof Note)
+  } else if (name instanceof Pitch)
     return new Chord(name, symbol);
 
-  throw new Error('Invalid Chord. Couldn\'t find note name');
+  throw new Error('Invalid Chord. Couldn\'t find pitch name');
 }
 
 function scaleConstructor(tonic, scale) {
-  tonic = (tonic instanceof Note) ? tonic : teoria.note(tonic);
+  tonic = (tonic instanceof Pitch) ? tonic : teoria.pitch(tonic);
   return new Scale(tonic, scale);
 }
 
 var teoria = {
-  note: noteConstructor,
+  pitch: pitchConstructor,
 
   chord: chordConstructor,
 
@@ -67,7 +67,7 @@ var teoria = {
 
   scale: scaleConstructor,
 
-  Note: Note,
+  Pitch: Pitch,
   Chord: Chord,
   Scale: Scale,
   Interval: Interval

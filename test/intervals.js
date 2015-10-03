@@ -9,223 +9,223 @@ function addSimple(interval1, interval2) {
 vows.describe('Intervals').addBatch({
   'Relative Intervals': {
     topic: function() {
-      return teoria.note('F#,');
+      return teoria.pitch('F#,');
     },
 
-    'Doubly diminished second': function(note) {
-      assert.deepEqual(note.interval('dd2'), teoria.note('Gbb,'));
+    'Doubly diminished second': function(pitch) {
+      assert.deepEqual(pitch.interval('dd2'), teoria.pitch('Gbb,'));
     },
 
-    'Diminished second': function(note) {
-      assert.deepEqual(note.interval('d2'), teoria.note('Gb,'));
+    'Diminished second': function(pitch) {
+      assert.deepEqual(pitch.interval('d2'), teoria.pitch('Gb,'));
     },
 
-    'Diminished second, API method two': function(note) {
-      assert.deepEqual(teoria.interval(note, teoria.interval('d2')), teoria.note('Gb,'));
+    'Diminished second, API method two': function(pitch) {
+      assert.deepEqual(teoria.interval(pitch, teoria.interval('d2')), teoria.pitch('Gb,'));
     },
 
-    'Diminished second, API method three': function(note) {
-      assert.deepEqual(note.interval(teoria.interval('d2')), teoria.note('Gb,'));
+    'Diminished second, API method three': function(pitch) {
+      assert.deepEqual(pitch.interval(teoria.interval('d2')), teoria.pitch('Gb,'));
     },
 
-    'Minor second': function(note) {
-      assert.deepEqual(note.interval('m2'), teoria.note('G,'));
+    'Minor second': function(pitch) {
+      assert.deepEqual(pitch.interval('m2'), teoria.pitch('G,'));
     },
 
-    'Major second': function(note) {
-      assert.deepEqual(note.interval('M2'), teoria.note('G#,'));
+    'Major second': function(pitch) {
+      assert.deepEqual(pitch.interval('M2'), teoria.pitch('G#,'));
     },
 
-    'Augmented second': function(note) {
-      assert.deepEqual(note.interval('A2'), teoria.note('Gx,'));
+    'Augmented second': function(pitch) {
+      assert.deepEqual(pitch.interval('A2'), teoria.pitch('Gx,'));
     },
 
-    'Doubly diminished third': function(note) {
-      assert.deepEqual(note.interval('dd3'), teoria.note('Abb,'));
+    'Doubly diminished third': function(pitch) {
+      assert.deepEqual(pitch.interval('dd3'), teoria.pitch('Abb,'));
     },
 
-    'Diminished third': function(note) {
-      assert.deepEqual(note.interval('d3'), teoria.note('Ab,'));
+    'Diminished third': function(pitch) {
+      assert.deepEqual(pitch.interval('d3'), teoria.pitch('Ab,'));
     },
 
-    'Minor third': function(note) {
-      assert.deepEqual(note.interval('m3'), teoria.note('A,'));
+    'Minor third': function(pitch) {
+      assert.deepEqual(pitch.interval('m3'), teoria.pitch('A,'));
     },
 
-    'Major third': function(note) {
-      assert.deepEqual(note.interval('M3'), teoria.note('A#,'));
+    'Major third': function(pitch) {
+      assert.deepEqual(pitch.interval('M3'), teoria.pitch('A#,'));
     },
 
-    'Augmented third': function(note) {
-      assert.deepEqual(note.interval('A3'), teoria.note('Ax,'));
+    'Augmented third': function(pitch) {
+      assert.deepEqual(pitch.interval('A3'), teoria.pitch('Ax,'));
     },
 
-    'Doubly diminished fourth': function(note) {
-      assert.deepEqual(note.interval('dd4'), teoria.note('Bbb,'));
+    'Doubly diminished fourth': function(pitch) {
+      assert.deepEqual(pitch.interval('dd4'), teoria.pitch('Bbb,'));
     },
 
-    'Diminished fourth': function(note) {
-      assert.deepEqual(note.interval('d4'), teoria.note('Bb,'));
+    'Diminished fourth': function(pitch) {
+      assert.deepEqual(pitch.interval('d4'), teoria.pitch('Bb,'));
     },
 
-    'Perfect fourth': function(note) {
-      assert.deepEqual(note.interval('P4'), teoria.note('B,'));
+    'Perfect fourth': function(pitch) {
+      assert.deepEqual(pitch.interval('P4'), teoria.pitch('B,'));
     },
 
-    'Augmented fourth': function(note) {
-      assert.deepEqual(note.interval('A4'), teoria.note('B#,'));
+    'Augmented fourth': function(pitch) {
+      assert.deepEqual(pitch.interval('A4'), teoria.pitch('B#,'));
     },
 
-    'Doubly augmented fourth': function(note) {
-      assert.deepEqual(note.interval('AA4'), teoria.note('Bx,'));
+    'Doubly augmented fourth': function(pitch) {
+      assert.deepEqual(pitch.interval('AA4'), teoria.pitch('Bx,'));
     },
 
-    'Doubly diminished fifth': function(note) {
-      assert.deepEqual(note.interval('dd5'), teoria.note('Cb'));
+    'Doubly diminished fifth': function(pitch) {
+      assert.deepEqual(pitch.interval('dd5'), teoria.pitch('Cb'));
     },
 
-    'Diminished fifth': function(note) {
-      assert.deepEqual(note.interval('d5'), teoria.note('C'));
+    'Diminished fifth': function(pitch) {
+      assert.deepEqual(pitch.interval('d5'), teoria.pitch('C'));
     },
 
-    'Perfect fifth': function(note) {
-      assert.deepEqual(note.interval('P5'), teoria.note('C#'));
+    'Perfect fifth': function(pitch) {
+      assert.deepEqual(pitch.interval('P5'), teoria.pitch('C#'));
     },
 
-    'Augmented fifth': function(note) {
-      assert.deepEqual(note.interval('A5'), teoria.note('Cx'));
+    'Augmented fifth': function(pitch) {
+      assert.deepEqual(pitch.interval('A5'), teoria.pitch('Cx'));
     },
 
-    'Doubly diminished sixth': function(note) {
-      assert.deepEqual(note.interval('dd6'), teoria.note('Dbb'));
+    'Doubly diminished sixth': function(pitch) {
+      assert.deepEqual(pitch.interval('dd6'), teoria.pitch('Dbb'));
     },
 
-    'Diminished sixth': function(note) {
-      assert.deepEqual(note.interval('d6'), teoria.note('Db'));
+    'Diminished sixth': function(pitch) {
+      assert.deepEqual(pitch.interval('d6'), teoria.pitch('Db'));
     },
 
-    'Minor sixth': function(note) {
-      assert.deepEqual(note.interval('m6'), teoria.note('D'));
+    'Minor sixth': function(pitch) {
+      assert.deepEqual(pitch.interval('m6'), teoria.pitch('D'));
     },
 
-    'Major sixth': function(note) {
-      assert.deepEqual(note.interval('M6'), teoria.note('D#'));
+    'Major sixth': function(pitch) {
+      assert.deepEqual(pitch.interval('M6'), teoria.pitch('D#'));
     },
 
-    'Augmented sixth': function(note) {
-      assert.deepEqual(note.interval('A6'), teoria.note('Dx'));
+    'Augmented sixth': function(pitch) {
+      assert.deepEqual(pitch.interval('A6'), teoria.pitch('Dx'));
     },
 
-    'Doubly diminished seventh': function(note) {
-      assert.deepEqual(note.interval('dd7'), teoria.note('Ebb'));
+    'Doubly diminished seventh': function(pitch) {
+      assert.deepEqual(pitch.interval('dd7'), teoria.pitch('Ebb'));
     },
 
-    'Diminished seventh': function(note) {
-      assert.deepEqual(note.interval('d7'), teoria.note('Eb'));
+    'Diminished seventh': function(pitch) {
+      assert.deepEqual(pitch.interval('d7'), teoria.pitch('Eb'));
     },
 
-    'Minor seventh': function(note) {
-      assert.deepEqual(note.interval('m7'), teoria.note('E'));
+    'Minor seventh': function(pitch) {
+      assert.deepEqual(pitch.interval('m7'), teoria.pitch('E'));
     },
 
-    'Major seventh': function(note) {
-      assert.deepEqual(note.interval('M7'), teoria.note('E#'));
+    'Major seventh': function(pitch) {
+      assert.deepEqual(pitch.interval('M7'), teoria.pitch('E#'));
     },
 
-    'Augmented seventh': function(note) {
-      assert.deepEqual(note.interval('A7'), teoria.note('Ex'));
+    'Augmented seventh': function(pitch) {
+      assert.deepEqual(pitch.interval('A7'), teoria.pitch('Ex'));
     },
 
-    'Doubly diminished octave': function(note) {
-      assert.deepEqual(note.interval('dd8'), teoria.note('Fb'));
+    'Doubly diminished octave': function(pitch) {
+      assert.deepEqual(pitch.interval('dd8'), teoria.pitch('Fb'));
     },
 
-    'Diminished octave': function(note) {
-      assert.deepEqual(note.interval('d8'), teoria.note('F'));
+    'Diminished octave': function(pitch) {
+      assert.deepEqual(pitch.interval('d8'), teoria.pitch('F'));
     },
 
-    'Perfect octave': function(note) {
-      assert.deepEqual(note.interval('P8'), teoria.note('F#'));
+    'Perfect octave': function(pitch) {
+      assert.deepEqual(pitch.interval('P8'), teoria.pitch('F#'));
     },
 
-    'Augmented octave': function(note) {
-      assert.deepEqual(note.interval('A8'), teoria.note('Fx'));
+    'Augmented octave': function(pitch) {
+      assert.deepEqual(pitch.interval('A8'), teoria.pitch('Fx'));
     },
 
-    'Minor ninth': function(note) {
-      assert.deepEqual(note.interval('m9'), teoria.note('G'));
+    'Minor ninth': function(pitch) {
+      assert.deepEqual(pitch.interval('m9'), teoria.pitch('G'));
     },
 
-    'Major ninth': function(note) {
-      assert.deepEqual(note.interval('M9'), teoria.note('G#'));
+    'Major ninth': function(pitch) {
+      assert.deepEqual(pitch.interval('M9'), teoria.pitch('G#'));
     },
 
-    'Minor tenth': function(note) {
-      assert.deepEqual(note.interval('m10'), teoria.note('A'));
+    'Minor tenth': function(pitch) {
+      assert.deepEqual(pitch.interval('m10'), teoria.pitch('A'));
     },
 
-    'Major tenth': function(note) {
-      assert.deepEqual(note.interval('M10'), teoria.note('A#'));
+    'Major tenth': function(pitch) {
+      assert.deepEqual(pitch.interval('M10'), teoria.pitch('A#'));
     },
 
-    'Perfect eleventh': function(note) {
-      assert.deepEqual(note.interval('P11'), teoria.note('B'));
+    'Perfect eleventh': function(pitch) {
+      assert.deepEqual(pitch.interval('P11'), teoria.pitch('B'));
     },
 
-    'Diminished twelfth': function(note) {
-      assert.deepEqual(note.interval('d12'), teoria.note('c'));
+    'Diminished twelfth': function(pitch) {
+      assert.deepEqual(pitch.interval('d12'), teoria.pitch('c'));
     },
 
-    'Perfect twelfth': function(note) {
-      assert.deepEqual(note.interval('P12'), teoria.note('c#'));
+    'Perfect twelfth': function(pitch) {
+      assert.deepEqual(pitch.interval('P12'), teoria.pitch('c#'));
     },
 
-    'Minor thirteenth': function(note) {
-      assert.deepEqual(note.interval('m13'), teoria.note('d'));
+    'Minor thirteenth': function(pitch) {
+      assert.deepEqual(pitch.interval('m13'), teoria.pitch('d'));
     },
 
-    'Major thirteenth': function(note) {
-      assert.deepEqual(note.interval('M13'), teoria.note('d#'));
+    'Major thirteenth': function(pitch) {
+      assert.deepEqual(pitch.interval('M13'), teoria.pitch('d#'));
     },
 
-    'Minor fourteenth': function(note) {
-      assert.deepEqual(note.interval('m14'), teoria.note('e'));
+    'Minor fourteenth': function(pitch) {
+      assert.deepEqual(pitch.interval('m14'), teoria.pitch('e'));
     },
 
-    'Major fourteenth': function(note) {
-      assert.deepEqual(note.interval('M14'), teoria.note('e#'));
+    'Major fourteenth': function(pitch) {
+      assert.deepEqual(pitch.interval('M14'), teoria.pitch('e#'));
     },
 
     'Doubly diminished second up': function() {
-      assert.deepEqual(teoria.note('e').interval(teoria.note('fbb')),
+      assert.deepEqual(teoria.pitch('e').interval(teoria.pitch('fbb')),
           teoria.interval('dd2'));
     },
 
     'Doubly diminished second down': function() {
-      assert.deepEqual(teoria.note('f').interval(teoria.note('ex')),
+      assert.deepEqual(teoria.pitch('f').interval(teoria.pitch('ex')),
           teoria.interval('dd-2'));
     }
   },
 
   'Interval descending': {
     'A major third down from E4': function() {
-      assert.deepEqual(teoria.note('E4').interval('M-3'), teoria.note('C4'));
+      assert.deepEqual(teoria.pitch('E4').interval('M-3'), teoria.pitch('C4'));
     },
 
     'Minor second down from C2': function() {
-      assert.deepEqual(teoria.note('C2').interval('m-2'), teoria.note('B1'));
+      assert.deepEqual(teoria.pitch('C2').interval('m-2'), teoria.pitch('B1'));
     },
 
     'A diminished fifth down from Eb5': function() {
-      assert.deepEqual(teoria.note('Eb5').interval('d-5'), teoria.note('A4'));
+      assert.deepEqual(teoria.pitch('Eb5').interval('d-5'), teoria.pitch('A4'));
     },
 
     'A major ninth down from G#4': function() {
-      assert.deepEqual(teoria.note('G#4').interval('M-9'), teoria.note('F#3'));
+      assert.deepEqual(teoria.pitch('G#4').interval('M-9'), teoria.pitch('F#3'));
     },
 
     'An augmented sixth down from Bb4': function() {
-      assert.deepEqual(teoria.note('Bb4').interval('A-6'), teoria.note('Dbb4'));
+      assert.deepEqual(teoria.pitch('Bb4').interval('A-6'), teoria.pitch('Dbb4'));
     }
   },
 
@@ -385,27 +385,27 @@ vows.describe('Intervals').addBatch({
 
   'Interval direction': {
     'A3 to C4 is up': function() {
-      assert.equal(teoria.note('A3').interval(teoria.note('C4')).direction(), 'up');
+      assert.equal(teoria.pitch('A3').interval(teoria.pitch('C4')).direction(), 'up');
     },
 
     'Bb5 to Bb5 is up (a unison is always up)': function() {
-      assert.equal(teoria.note('Bb5').interval(teoria.note('Bb5')).direction(), 'up');
+      assert.equal(teoria.pitch('Bb5').interval(teoria.pitch('Bb5')).direction(), 'up');
     },
 
     'G#4 to D4 is down': function() {
-      assert.equal(teoria.note('G#4').interval(teoria.note('D4')).direction(), 'down');
+      assert.equal(teoria.pitch('G#4').interval(teoria.pitch('D4')).direction(), 'down');
     },
 
     'F6 to E6 is down': function() {
-      assert.equal(teoria.note('F6').interval(teoria.note('E6')).direction(), 'down');
+      assert.equal(teoria.pitch('F6').interval(teoria.pitch('E6')).direction(), 'down');
     },
 
     'C4 to A3 is up, w. direction set to up': function() {
-      assert.equal(teoria.note('C4').interval(teoria.note('A3')).direction('up').direction(), 'up');
+      assert.equal(teoria.pitch('C4').interval(teoria.pitch('A3')).direction('up').direction(), 'up');
     },
 
     'A3 to C4 remains up w. direction set to up': function() {
-      assert.equal(teoria.note('A3').interval(teoria.note('C4')).direction('up').direction(), 'up');
+      assert.equal(teoria.pitch('A3').interval(teoria.pitch('C4')).direction('up').direction(), 'up');
     },
 
     'm2 is up': function() {
@@ -485,7 +485,7 @@ vows.describe('Intervals').addBatch({
 
   'Theoretical intervals - Triple augmented': {
     topic: function() {
-      return teoria.note('F').interval(teoria.note('Bx'));
+      return teoria.pitch('F').interval(teoria.pitch('Bx'));
     },
 
     'F to Bx has quality value = 3 (triple augmented)': function(interval) {

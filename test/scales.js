@@ -5,56 +5,56 @@ var vows = require('vows'),
 vows.describe('Scales').addBatch({
   'Ab2': {
     topic: function() {
-      return teoria.note('Ab2');
+      return teoria.pitch('Ab2');
     },
 
-    'Ionian/Major': function(note) {
-      assert.deepEqual(note.scale('ionian').simple(),
+    'Ionian/Major': function(pitch) {
+      assert.deepEqual(pitch.scale('ionian').simple(),
           ['ab', 'bb', 'c', 'db', 'eb', 'f', 'g']);
     },
 
-    'Dorian': function(note) {
-      assert.deepEqual(note.scale('dorian').simple(),
+    'Dorian': function(pitch) {
+      assert.deepEqual(pitch.scale('dorian').simple(),
           ['ab', 'bb', 'cb', 'db', 'eb', 'f', 'gb']);
     },
 
-    'Phrygian': function(note) {
-      assert.deepEqual(note.scale('phrygian').simple(),
+    'Phrygian': function(pitch) {
+      assert.deepEqual(pitch.scale('phrygian').simple(),
           ["ab", "bbb", "cb", "db", "eb", "fb", "gb"]);
     },
 
-    'Lydian': function(note) {
-      assert.deepEqual(note.scale('lydian').simple(),
+    'Lydian': function(pitch) {
+      assert.deepEqual(pitch.scale('lydian').simple(),
           ["ab", "bb", "c", "d", "eb", "f", "g"]);
     },
 
-    'Mixolydian': function(note) {
-      assert.deepEqual(note.scale('mixolydian').simple(),
+    'Mixolydian': function(pitch) {
+      assert.deepEqual(pitch.scale('mixolydian').simple(),
           ["ab", "bb", "c", "db", "eb", "f", "gb"]);
     },
 
-    'Aeolian/Minor': function(note) {
-      assert.deepEqual(note.scale('aeolian').simple(),
+    'Aeolian/Minor': function(pitch) {
+      assert.deepEqual(pitch.scale('aeolian').simple(),
           ["ab", "bb", "cb", "db", "eb", "fb", "gb"]);
     },
 
-    'Locrian': function(note) {
-      assert.deepEqual(note.scale('locrian').simple(),
+    'Locrian': function(pitch) {
+      assert.deepEqual(pitch.scale('locrian').simple(),
           ["ab", "bbb", "cb", "db", "ebb", "fb", "gb"]);
     },
 
-    'Major Pentatonic': function(note) {
-      assert.deepEqual(note.scale('majorpentatonic').simple(),
+    'Major Pentatonic': function(pitch) {
+      assert.deepEqual(pitch.scale('majorpentatonic').simple(),
           ["ab", "bb", "c", "eb", "f"]);
     },
 
-    'Minor Pentatonic': function(note) {
-      assert.deepEqual(note.scale('minorpentatonic').simple(),
+    'Minor Pentatonic': function(pitch) {
+      assert.deepEqual(pitch.scale('minorpentatonic').simple(),
           ["ab", "cb", "db", "eb", "gb"]);
     },
 
-    'Chromatic': function(note) {
-      assert.deepEqual(note.scale('chromatic').simple(),
+    'Chromatic': function(pitch) {
+      assert.deepEqual(pitch.scale('chromatic').simple(),
           ["ab", "bbb", "bb", "cb", "c", "db",
            "d", "eb", "fb", "f", "gb", "g"]);
     }

@@ -26,7 +26,7 @@ a third between major and minor can be written `[2, 3.5]`.
 Features
 ---------
 
- - A note object (`teoria.Note`), which understands alterations, octaves,
+ - A pitch object (`teoria.Pitch`), which understands alterations, octaves,
  key number, frequency and etc. and Helmholtz notation
 
  - A chord object (`teoria.Chord`), which understands everything
@@ -40,7 +40,7 @@ Features
  also supports solfège, which makes it perfect for tutorials on sight-reading.
 
  - An interval object (`teoria.Interval`), which makes it easy to find the
- interval between two notes, or find a note that is a given interval from a note.
+ interval between two pitches, or find a pitch that is a given interval from a pitch.
  There's also support for counting the interval span in semitones and inverting the
  interval.
 
@@ -65,19 +65,19 @@ for a technical library reference, look further down this document.
 
 ```javascript
 
-// Create notes:
-var a4 = teoria.note('a4');       // Scientific notation
-var g5 = teoria.note("g''");      // Helmholtz notation
-var c3 = teoria.note.fromKey(28); // From a piano key number
+// Create pitches:
+var a4 = teoria.pitch('a4');       // Scientific notation
+var g5 = teoria.pitch("g''");      // Helmholtz notation
+var c3 = teoria.pitch.fromKey(28); // From a piano key number
 
-// Find and create notes based on intervals
+// Find and create pitches based on intervals
 teoria.interval(a4, g5);    // Returns a Interval object representing a minor seventh
-teoria.interval(a4, 'M6');  // Returns a Note representing F#5
-a4.interval('m3');          // Returns a Note representing C#4
+teoria.interval(a4, 'M6');  // Returns a Pitch representing F#5
+a4.interval('m3');          // Returns a Pitch representing C#4
 a4.interval(g5);            // Returns a Interval object representing a minor seventh
-a4.interval(teoria.note('bb5')).invert(); // Returns a Interval representing a major seventh
+a4.interval(teoria.pitch('bb5')).invert(); // Returns a Interval representing a major seventh
 
-// Create scales, based on notes.
+// Create scales, based on pitches.
 a4.scale('mixolydian').simple();  // Returns: ["a", "b", "c#", "d", "e", "f#", "g"]
 a4.scale('aeolian').simple();     // Returns: ["a", "b", "c", "d", "e", "f", "g"]
 g5.scale('ionian').simple();      // Returns: ["g", "a", "b", "c", "d", "e", "f#"]
@@ -89,156 +89,141 @@ c3.chord('m').name;       // Returns 'Cm'
 teoria.chord('Ab#5b9');   // Returns a Chord object, representing a Ab#5b9 chord
 g5.chord('dim');          // Returns a Chord object, representing a Gdim chord
 
-// Calculate note frequencies or find the note corresponding to a frequency
-teoria.note.fromFrequency(467); // Returns: {'note':{...},'cents':3.102831} -> A4# a little out of tune.
+// Calculate pitch frequencies or find the pitch corresponding to a frequency
+teoria.pitch.fromFrequency(467); // Returns: {'pitch':{...},'cents':3.102831} -> A4# a little out of tune.
 a4.fq(); // Outputs 440
 g5.fq(); // Outputs 783.9908719634985
 
 // teoria allows for crazy chaining:
-teoria.note('a')    // Create a note, A3
-  .scale('lydian')  // Create a lydian scale with that note as root (A lydian)
+teoria.pitch('a')    // Create a pitch, A3
+  .scale('lydian')  // Create a lydian scale with that pitch as root (A lydian)
   .interval('M2')   // Transpose the whole scale a major second up (B lydian)
-  .get('third')     // Get the third note of the scale (D#4)
-  .chord('maj9')    // Create a maj9 chord with that note as root (D#maj9)
+  .get('third')     // Get the third pitch of the scale (D#4)
+  .chord('maj9')    // Create a maj9 chord with that pitch as root (D#maj9)
   .toString();      // Make a string representation: 'D#maj9'
 ```
 
 Documentation
 ------------------------
 
-## teoria.note (name | coord[, duration])
+## teoria.pitch (name | coord)
 
-*name* - The name argument is the note name as a string. The note can both
+*name* - The name argument is the pitch name as a string. The pitch can both
 be expressed in scientific and Helmholtz notation.
-Some examples of valid note names: `Eb4`, `C#,,`, `C4`, `d#''`, `Ab2`
+Some examples of valid pitch names: `Eb4`, `C#,,`, `C4`, `d#''`, `Ab2`
 
 *coord* - If the first argument isn't a string, but a coord array,
-it will instantiate a `Note` instance.
+it will instantiate a `Pitch` instance.
 
-*duration* - The duration argument is an optional `object` argument.
-The object has two also optional parameters:
-
- - `value` - A `number` corresponding to the value of the duration, such that:
-`1 = whole`, `2 = half (minim)`, `4 = quarter`, `8 = eight`
-
- - `dots` - The number of dots attached to the note. Defaults to `0`.
-
-### teoria.note.fromKey(key)
-A static method that returns an instance of Note set to the note
+### teoria.pitch.fromKey(key)
+A static method that returns an instance of Pitch set to the pitch
 at the given piano key, where A0 is key number 1.
 See [Wikipedia's piano key article](http://en.wikipedia.org/wiki/Piano_key_frequencies)
 for more information.
 
-### teoria.note.fromFrequency(fq)
+### teoria.pitch.fromFrequency(fq)
 A static method returns an object containing two elements:
 
-*note* - A `Note` which corresponds to the closest note with the given frequency
+*pitch* - A `Pitch` which corresponds to the closest pitch with the given frequency
 
-*cents* - A number value of how many cents the note is out of tune
+*cents* - A number value of how many cents the pitch is out of tune
 
-### teoria.note.fromMIDI(note)
- - Returns an instance of Note set to the corresponding MIDI note value.
+### teoria.pitch.fromMIDI(pitch)
+ - Returns an instance of Pitch set to the corresponding MIDI pitch value.
 
-*note* - A number ranging from 0-127 representing a MIDI note value
+*pitch* - A number ranging from 0-127 representing a MIDI pitch value
 
-### teoria.note.fromString(note)
- - Returns an instance of Note representing the note name
+### teoria.pitch.fromString(pitch)
+ - Returns an instance of Pitch representing the pitch name
 
-*note* - The name argument is the note name as a string. The note can both
+*pitch* - The name argument is the pitch name as a string. The pitch can both
 be expressed in scientific and Helmholtz notation.
-Some examples of valid note names: `Eb4`, `C#,,`, `C4`, `d#''`, `Ab2`
+Some examples of valid pitch names: `Eb4`, `C#,,`, `C4`, `d#''`, `Ab2`
 
-#### Note.name()
- - The name of the note, in lowercase letter (*only* the name, not the
+#### Pitch.name()
+ - The name of the pitch, in lowercase letter (*only* the name, not the
  accidental signs)
 
-#### Note.octave()
- - The numeric value of the octave of the note
+#### Pitch.octave()
+ - The numeric value of the octave of the pitch
 
-#### Note.duration
- - The duration object as described in the constructor for Note
-
-#### Note.accidental()
+#### Pitch.accidental()
  - Returns the string symbolic of the accidental sign (`x`, `#`, `b` or `bb`)
 
-#### Note.accidentalValue()
+#### Pitch.accidentalValue()
  - Returns the numeric value (mostly used internally) of the sign:
 `x = 2, # = 1, b = -1, bb = -2`
 
-#### Note#key([whitenotes])
+#### Pitch#key([whitekeys])
  - Returns the piano key number. E.g. A4 would return 49
 
-*whitenotes* - If this parameter is set to `true` only the white keys will
+*whitekeys* - If this parameter is set to `true` only the white keys will
 be counted when finding the key number. This is mostly for internal use.
 
-#### Note#midi()
- - Returns a number ranging from 0-127 representing a MIDI note value
+#### Pitch#midi()
+ - Returns a number ranging from 0-127 representing a MIDI pitch value
 
-#### Note#fq([concertPitch])
- - Calculates and returns the frequency of the note.
+#### Pitch#fq([concertPitch])
+ - Calculates and returns the frequency of the pitch.
 
 *concertPitch* - If supplied this number will be used instead of the normal
 concert pitch which is 440hz. This is useful for some classical music.
 
-#### Note#chroma()
- - Returns the pitch class (index) of the note.
+#### Pitch#chroma()
+ - Returns the pitch class (index) of the pitch.
 
 This allows for easy enharmonic checking:
 
-    teoria.note('e').chroma() === teoria.note('fb').chroma();
+    teoria.pitch('e').chroma() === teoria.pitch('fb').chroma();
 
 The chroma number is ranging from pitch class C which is 0 to 11 which is B
 
-#### Note#scale(scaleName)
- - Returns an instance of Scale, with the tonic/root set to this note.
+#### Pitch#scale(scaleName)
+ - Returns an instance of Scale, with the tonic/root set to this pitch.
 
 *scaleName* - The name of the scale to be returned. `'minor'`,
 `'chromatic'`, `'ionian'` and others are valid scale names.
 
-#### Note#interval(interval)
- - A sugar function for calling teoria.interval(note, interval);
+#### Pitch#interval(interval)
+ - A sugar function for calling teoria.interval(pitch, interval);
 
 Look at the documentation for `teoria.interval`
 
-#### Note#transpose(interval)
- - Like the `#interval` method, but changes `this` note, instead of returning a new
+#### Pitch#transpose(interval)
+ - Like the `#interval` method, but changes `this` pitch, instead of returning a new
 
-#### Note#chord([name])
- - Returns an instance of Chord, with root note set to this note
+#### Pitch#chord([name])
+ - Returns an instance of Chord, with root pitch set to this pitch
 
 *name* - The name attribute is the last part of the chord symbol.
 Examples: `'m7'`, `'#5b9'`, `'major'`. If the name parameter
 isn't set, a standard major chord will be returned.
 
-#### Note#helmholtz()
- - Returns the note name formatted in Helmholtz notation.
+#### Pitch#helmholtz()
+ - Returns the pitch name formatted in Helmholtz notation.
 
-Example: `teoria.note('A5').helmholtz() -> "a''"`
+Example: `teoria.pitch('A5').helmholtz() -> "a''"`
 
-#### Note#scientific()
- - Returns the note name formatted in scientific notation.
+#### Pitch#scientific()
+ - Returns the pitch name formatted in scientific notation.
 
-Example: `teoria.note("ab'").scientific() -> "Ab4"`
+Example: `teoria.pitch("ab'").scientific() -> "Ab4"`
 
-#### Note#enharmonics(oneAccidental)
- - Returns all notes that are enharmonic with the note
+#### Pitch#enharmonics(oneAccidental)
+ - Returns all pitches that are enharmonic with the pitch
 
-*oneAccidental* - Boolean, if set to true, only enharmonic notes with one
+*oneAccidental* - Boolean, if set to true, only enharmonic pitches with one
 accidental is returned. E.g. results such as 'eb' and 'c#' but not 'ebb' and 'cx'
 
 ```javascript
-teoria.note('c').enharmonics().toString();
+teoria.pitch('c').enharmonics().toString();
 // -> 'dbb, b#'
 
-teoria.note('c').enharmonics(true).toString();
+teoria.pitch('c').enharmonics(true).toString();
 // -> 'b#'
 ```
 
-#### Note#durationInSeconds(bpm, beatUnit)
- - Returns the duration of the note, given a tempo (in bpm) and a beat unit
- (the lower numeral of the time signature)
-
-#### Note#solfege(scale, showOctaves)
+#### Pitch#solfege(scale, showOctaves)
  - Returns the solfege step in the given scale context
 
 *scale* - An instance of `Scale`, which is the context of the solfege step measuring
@@ -246,65 +231,59 @@ teoria.note('c').enharmonics(true).toString();
 *showOctaves* - A boolean. If set to true, a "Helmholtz-like" notation will be
 used if there's bigger intervals than an octave
 
-#### Note#durationName()
- - Returns the duration name.
-
-Examples: `teoria.note('A', 8).durationName() -> 'eighth'`,
-`teoria.note('C', 16).durationName() -> 'sixteenth'`
-
-#### Note#scaleDegree(scale)
- - Returns this note's degree in a given scale (Scale). For example a
+#### Pitch#scaleDegree(scale)
+ - Returns this pitch's degree in a given scale (Scale). For example a
  `D` in a C major scale will return `2` as it is the second degree of that scale.
- If however the note *isn't* a part of the scale, the degree returned will be
+ If however the pitch *isn't* a part of the scale, the degree returned will be
  `0`, meaning that the degree doesn't exist. This allows this method to be both
- a scale degree index finder *and* an "isNoteInScale" method.
+ a scale degree index finder *and* an "isPitchInScale" method.
 
 *scale* - An instance of `Scale` which is the context of the degree measuring
 
-#### Note#toString([dontShow])
- - Usability function for returning the note as a string
+#### Pitch#toString([dontShow])
+ - Usability function for returning the pitch as a string
 
 *dontShow* - If set to `true` the octave will not be included in the returned string.
 
 ## Chord(root, chord)
  - A chord class with a lot of functionality to alter and analyze the chord.
 
-*root* - A `Note` instance which is to be the root of the chord
+*root* - A `Pitch` instance which is to be the root of the chord
 
 *chord* - A string containing the chord symbol. This can be anything from
 simple chords, to super-advanced jazz chords thanks to the detailed and
 robust chord parser engine. Example values:
 `'m'`, `'m7'`, `'#5b9'`, `'9sus4` and `'#11b5#9'`
 
-### teoria.chord(name || note[, octave || symbol])
- - A simple function for getting the notes, no matter the octave, in a chord
+### teoria.chord(name || pitch[, octave || symbol])
+ - A simple function for getting the pitches, no matter the octave, in a chord
 
-*name* - A string containing the full chord symbol, with note name. Examples:
+*name* - A string containing the full chord symbol, with pitch name. Examples:
 `'Ab7'`, `'F#(#11b5)'`
 
-*note* - Instead of supplying a string containing the full chord symbol,
-one can pass a `Note` object instead. The note will be considered root in
+*pitch* - Instead of supplying a string containing the full chord symbol,
+one can pass a `Pitch` object instead. The pitch will be considered root in
 the new chord object
 
 *octave* - If the first argument of the function is a chord name (`typeof "string"`),
 then the second argument is an optional octave number (`typeof "number"`) of the root.
 
-*symbol* - A string containing the chord symbol (excluding the note name)
+*symbol* - A string containing the chord symbol (excluding the pitch name)
 
 #### Chord.name
  - Holds the full chord symbol, inclusive the root name.
 
 #### Chord.root
- - Holds the `Note` that is the root of the chord.
+ - Holds the `Pitch` that is the root of the chord.
 
-#### Chord#notes()
- - Returns an array of `Note`s that the chord consists of.
+#### Chord#pitches()
+ - Returns an array of `Pitch`s that the chord consists of.
 
 #### Chord#simple()
- - Returns an `Array` of only the notes' names, not the full `Note` objects.
+ - Returns an `Array` of only the pitches' names, not the full `Pitch` objects.
 
 #### Chord#bass()
- - Returns the bass note of the chord (The note voiced the lowest)
+ - Returns the bass pitch of the chord (The pitch voiced the lowest)
 
 #### Chord#voicing([voicing])
  - Works both as a setter and getter. If no parameter is supplied the
@@ -318,21 +297,21 @@ Here's an example:
 var bbmaj = teoria.chord('Bbmaj7');
 // Default voicing:
 bbmaj.voicing();  // #-> ['P1', 'M3', 'P5', 'M7'];
-bbmaj.notes();    // #-> ['bb', 'd', 'f', 'a'];
+bbmaj.pitches();    // #-> ['bb', 'd', 'f', 'a'];
 
 // New voicing
 bbmaj.voicing(['P1', 'P5', 'M7', 'M10']);
-bbmaj.notes();    // #-> ['bb', 'f', 'a', 'd'];
+bbmaj.pitches();    // #-> ['bb', 'f', 'a', 'd'];
 ```
 *NB:* Note that above returned results are pseudo-results, as they will be
-returned wrapped in `Interval` and `Note` objects.
+returned wrapped in `Interval` and `Pitch` objects.
 
 #### Chord#quality()
  - Returns a string which holds the quality of the chord, `'major'`, `'minor'`,
  `'augmented'`, `'diminished'`, `'half-diminished'`, `'dominant'` or `undefined`
 
 #### Chord#get(interval)
- - Returns the note at a given interval in the chord, if it exists.
+ - Returns the pitch at a given interval in the chord, if it exists.
 
 *interval* - A string name of an interval, for example `'third'`, `'fifth'`, `'ninth'`.
 
@@ -369,7 +348,7 @@ returned wrapped in `Interval` and `Note` objects.
 ## Scale(tonic, scale)
  - The teoria representation of a scale, with a given tonic.
 
-*tonic* - A `Note` which is to be the tonic of the scale
+*tonic* - A `Pitch` which is to be the tonic of the scale
 
 *scale* - Can either be a name of a scale (string), or an array of
 absolute intervals that defines the scale. The scales supported by default are:
@@ -396,20 +375,20 @@ absolute intervals that defines the scale. The scales supported by default are:
 ### teoria.scale(tonic, scale)
  - Sugar function for constructing a new `Scale` object
 
-#### Scale.notes()
- - Returns an array of `Note`s which is the scale's notes
+#### Scale.pitches()
+ - Returns an array of `Pitch`s which is the scale's pitches
 
 #### Scale.name
  - The name of the scale (if available). Type `string` or `undefined`
 
 #### Scale.tonic
- - The `Note` which is the scale's tonic
+ - The `Pitch` which is the scale's tonic
 
 #### Scale#simple()
- - Returns an `Array` of only the notes' names, not the full `Note` objects.
+ - Returns an `Array` of only the pitches' names, not the full `Pitch` objects.
 
 #### Scale#type()
- - Returns the type of the scale, depending on the number of notes.
+ - Returns the type of the scale, depending on the number of pitches.
  A scale of length x gives y:
   - 2 gives 'ditonic'
   - 3 gives 'tritonic'
@@ -420,7 +399,7 @@ absolute intervals that defines the scale. The scales supported by default are:
   - 8 gives 'octatonic'
 
 #### Scale#get(index)
- - Returns the note at the given scale index
+ - Returns the pitch at the given scale index
 
 *index* - Can be a number referring to the scale step, or the name (string) of the
 scale step. E.g. 'first', 'second', 'fourth', 'seventh'.
@@ -430,7 +409,7 @@ scale step. E.g. 'first', 'second', 'fourth', 'seventh'.
 
 *index* Same as `Scale#get`
 
-*showOctaves* - A boolean meaning the same as `showOctaves` in `Note#solfege`
+*showOctaves* - A boolean meaning the same as `showOctaves` in `Pitch#solfege`
 
 
 ## teoria.interval(from, to)
@@ -440,14 +419,14 @@ scale step. E.g. 'first', 'second', 'fourth', 'seventh'.
 #### teoria.interval(`string`: from)
  - A sugar method for the `Interval.toCoord` function
 
-#### teoria.interval(`Note`: from, `string`: to)
+#### teoria.interval(`Pitch`: from, `string`: to)
  - A sugar method for the `Interval.from` function
 
-#### teoria.interval(`Note`: from, `Interval`: to)
+#### teoria.interval(`Pitch`: from, `Interval`: to)
  - Like above, but with a `Interval` instead of a string representation of
  the interval
 
-#### teoria.interval(`Note`: from, `Note`: to)
+#### teoria.interval(`Pitch`: from, `Pitch`: to)
  - A sugar method for the `Interval.between` function
 
 ##### teoria.interval.from -> Interval.from
@@ -463,21 +442,21 @@ scale step. E.g. 'first', 'second', 'fourth', 'seventh'.
  - Returns a `Interval` representing the interval expressed in string form.
 
 ### Interval.from(from, to)
- - Returns a note which is a given interval away from a root note.
+ - Returns a pitch which is a given interval away from a root pitch.
 
-*from* - The `Note` which is the root of the measuring
+*from* - The `Pitch` which is the root of the measuring
 
 *to* - A `Interval`
 
 ### Interval.between(from, to)
- - Returns an interval object which represents the interval between two notes.
+ - Returns an interval object which represents the interval between two pitches.
 
-*from* and *to* are two `Note`s which are the notes that the
+*from* and *to* are two `Pitch`s which are the pitches that the
 interval is measured from. For example if 'a' and 'c' are given, the resulting
 interval object would represent a minor third.
 
 ```javascript
-Interval.between(teoria.note("a"), teoria.note("c'")) -> teoria.interval('m3')
+Interval.between(teoria.pitch("a"), teoria.pitch("c'")) -> teoria.interval('m3')
 ```
 
 ### Interval.invert(simpleInterval)
