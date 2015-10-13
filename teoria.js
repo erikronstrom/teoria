@@ -8,10 +8,10 @@ var Scale = require('./lib/scale');
 function intervalConstructor(from, to) {
   // Construct a Interval object from string representation
   if (typeof from === 'string')
-    return Interval.toCoord(from);
+    return Interval.fromString(from);
 
   if (typeof to === 'string' && from instanceof Pitch)
-    return Interval.from(from, Interval.toCoord(to));
+    return Interval.from(from, Interval.fromString(to));
 
   if (to instanceof Interval && from instanceof Pitch)
     return Interval.from(from, to);
@@ -22,7 +22,7 @@ function intervalConstructor(from, to) {
   throw new Error('Invalid parameters');
 }
 
-intervalConstructor.toCoord = Interval.toCoord;
+intervalConstructor.toCoord = Interval.fromString;
 intervalConstructor.from = Interval.from;
 intervalConstructor.between = Interval.between;
 intervalConstructor.invert = Interval.invert;
@@ -100,7 +100,7 @@ function Chord(root, name) {
     bass = null;
   }
 
-  this.intervals = daccord(name).map(Interval.toCoord)
+  this.intervals = daccord(name).map(Interval.fromString)
   this._voicing = this.intervals.slice();
 
   if (bass) {
@@ -145,7 +145,7 @@ Chord.prototype = {
     // Set the voicing
     this._voicing = [];
     for (var i = 0, length = voicing.length; i < length; i++) {
-      this._voicing[i] = Interval.toCoord(voicing[i]);
+      this._voicing[i] = Interval.fromString(voicing[i]);
     }
 
     return this;
@@ -450,7 +450,7 @@ Interval.prototype = {
   }
 }
 
-Interval.toCoord = function(simple) {
+Interval.fromString = function(simple) {
   var coord = toCoord(simple);
   if (!coord)
     throw new Error('Invalid simple format interval');
@@ -467,7 +467,7 @@ Interval.between = function(from, to) {
 }
 
 Interval.invert = function(sInterval) {
-  return Interval.toCoord(sInterval).invert().toString();
+  return Interval.fromString(sInterval).invert().toString();
 }
 
 module.exports = Interval;
@@ -716,7 +716,7 @@ Pitch.prototype = {
   },
 
   interval: function(interval) {
-    if (typeof interval === 'string') interval = Interval.toCoord(interval);
+    if (typeof interval === 'string') interval = Interval.fromString(interval);
 
     if (interval instanceof Interval)
       return new Pitch(vector.add(this.coord, interval.coord));
@@ -795,7 +795,7 @@ Pitch.prototype = {
     inter = inter.simple(true).coord;
 
     return scale.scale.reduce(function(index, current, i) {
-      var coord = Interval.toCoord(current).coord;
+      var coord = Interval.fromString(current).coord;
       return coord[0] === inter[0] && coord[1] === inter[1] ? i + 1 : index;
     }, 0);
   },
@@ -956,7 +956,7 @@ Scale.prototype = {
 
   interval: function(interval) {
     interval = (typeof interval === 'string') ?
-      Interval.toCoord(interval) : interval;
+      Interval.fromString(interval) : interval;
     return new Scale(this.tonic.interval(interval), this.scale);
   },
 
@@ -1203,7 +1203,7 @@ module.exports = function(symbol) {
 }
 
 },{}],10:[function(require,module,exports){
-var coords = require('pitchcoord');
+var coords = require('notecoord');
 var accval = require('accidental-value');
 
 module.exports = function helmholtz(name) {

@@ -417,7 +417,7 @@ scale step. E.g. 'first', 'second', 'fourth', 'seventh'.
  for creating `Interval` objects.
 
 #### teoria.interval(`string`: from)
- - A sugar method for the `Interval.toCoord` function
+ - A sugar method for the `Interval.fromString` function
 
 #### teoria.interval(`Pitch`: from, `string`: to)
  - A sugar method for the `Interval.from` function
@@ -432,13 +432,13 @@ scale step. E.g. 'first', 'second', 'fourth', 'seventh'.
 ##### teoria.interval.from -> Interval.from
 ##### teoria.interval.between -> Interval.between
 ##### teoria.interval.invert -> Interval.invert
-##### teoria.interval.toCoord -> Interval.toCoord
+##### teoria.Interval.fromString -> Interval.fromString
 
 
 ## Interval(coord)
  - A representation of a music interval
 
-### Interval.toCoord(simpleInterval)
+### Interval.fromString(simpleInterval)
  - Returns a `Interval` representing the interval expressed in string form.
 
 ### Interval.from(from, to)

@@ -2,26 +2,31 @@ var Pitch = require('./lib/pitch');
 var Interval = require('./lib/interval');
 var Chord = require('./lib/chord');
 var Scale = require('./lib/scale');
+var Duration = require('./lib/duration');
+var Note = require('./lib/note');
 
-// never thought I would write this, but: Legacy support
 function intervalConstructor(from, to) {
   // Construct a Interval object from string representation
   if (typeof from === 'string')
-    return Interval.toCoord(from);
+    return Interval.fromString(from);
+  
+  if (from instanceof Array) {
+    return new Interval(from);
+  }
 
   if (typeof to === 'string' && from instanceof Pitch)
-    return Interval.from(from, Interval.toCoord(to));
+    return Interval.from(from, Interval.fromString(to));
 
   if (to instanceof Interval && from instanceof Pitch)
     return Interval.from(from, to);
 
   if (to instanceof Pitch && from instanceof Pitch)
     return Interval.between(from, to);
-
+  
   throw new Error('Invalid parameters');
 }
 
-intervalConstructor.toCoord = Interval.toCoord;
+intervalConstructor.toCoord = Interval.fromString;
 intervalConstructor.from = Interval.from;
 intervalConstructor.between = Interval.between;
 intervalConstructor.invert = Interval.invert;
@@ -38,17 +43,12 @@ pitchConstructor.fromKey = Pitch.fromKey;
 pitchConstructor.fromFrequency = Pitch.fromFrequency;
 pitchConstructor.fromMIDI = Pitch.fromMIDI;
 
-function chordConstructor(name, symbol) {
-  if (typeof name === 'string') {
-    var root, octave;
-    root = name.match(/^([a-h])(x|#|bb|b?)/i);
-    if (root && root[0]) {
-      octave = typeof symbol === 'number' ? symbol.toString(10) : '4';
-      return new Chord(Pitch.fromString(root[0].toLowerCase() + octave),
-                            name.substr(root[0].length));
-    }
-  } else if (name instanceof Pitch)
-    return new Chord(name, symbol);
+function chordConstructor(name, kind) {
+  if (typeof name === 'string' && !kind) {
+    return Chord.fromString(name);
+  } else if (name instanceof Pitch) {
+    return new Chord(name, kind);
+  }
 
   throw new Error('Invalid Chord. Couldn\'t find pitch name');
 }
@@ -66,11 +66,15 @@ var teoria = {
   interval: intervalConstructor,
 
   scale: scaleConstructor,
+  duration: Duration.coerce,
+  note: Note.coerce,
 
   Pitch: Pitch,
   Chord: Chord,
   Scale: Scale,
-  Interval: Interval
+  Interval: Interval,
+  Duration: Duration,
+  Note: Note
 };
 
 require('./lib/sugar')(teoria);
